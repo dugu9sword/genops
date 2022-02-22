@@ -4,7 +4,6 @@ import re
 import torch
 import numpy as np
 from scipy import sparse
-
 """
     genops
 
@@ -130,6 +129,20 @@ def rand(shape):
         return torch.rand(shape, device=Backend.TORCH_DEVICE)
     elif is_numpy():
         return np.random.random(shape)
+
+
+def randint(low: int, high: int, shape: TENSOR_SHAPE):
+    if is_torch():
+        return torch.randint(low, high, shape)
+    elif is_numpy():
+        return np.random.randint(low, high, shape)
+
+
+def gather(tensor: TENSOR, axis: int, index: TENSOR):
+    if is_torch():
+        return torch.gather(input=tensor, dim=axis, index=index)
+    elif is_numpy():
+        return np.take_along_axis(arr=tensor, indices=index, axis=axis)
 
 
 def normal(shape: TENSOR_SHAPE):
