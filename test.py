@@ -7,7 +7,7 @@ for backend in (genops.NUMPY, genops.TORCH):
     genops.set_backend(backend)
     genops.set_printoptions(precision=3)
     genops.set_seed(1926)
-    print(f"use backed {genops.Backend.FRAMEWORK}")
+    print(f"use backend {genops.Backend.FRAMEWORK}")
     print("* zeros: \n", genops.zeros([1, 2]))
     print("* ones: \n", genops.ones([2, 2]))
     print("* uniform: \n", genops.rand([1, 3]))

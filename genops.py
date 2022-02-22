@@ -36,11 +36,14 @@ class Backend:
 
 
 def set_backend(backend, device=None):
-    if isinstance(backend, str):
-        assert backend in (TORCH, NUMPY)
-        Backend.FRAMEWORK = backend
-        Backend.TORCH_DEVICE = device
-    elif isinstance(backend, torch.Tensor):
+    assert backend in (TORCH, NUMPY)
+    Backend.FRAMEWORK = backend
+    Backend.TORCH_DEVICE = device
+
+
+def set_backend_as(backend: DATA):
+    assert backend in (torch.Tensor, np.ndarray)
+    if isinstance(backend, torch.Tensor):
         Backend.FRAMEWORK = TORCH
         Backend.TORCH_DEVICE = backend.device
         # Backend.TORCH_DTYPE = backend.dtype
