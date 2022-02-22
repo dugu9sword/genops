@@ -2,6 +2,10 @@
 
 `GenOps` provides **Genral tensor Operations** for `numpy` and `torch`.
 
+```bash
+pip uninstall -y genops; pip install git+https://github.com/dugu9sword/genops.git
+```
+
 ## Switching Backend Framework
 
 `GenOps` is **torch-first**, just write your code following `torch`'s API, it can be easily adapted to `numpy`. `GenOps` **does not** re-invent new APIs to integrate other APIs.
