@@ -15,7 +15,7 @@ for backend in (genops.NUMPY, genops.TORCH):
     print("* arange: \n", genops.arange(1, 5, 3))
     print("* argmax: \n", genops.argmax(genops.rand([2, 4]), axis=1))
     print("* cat: \n", genops.cat([genops.rand([2, 4]), genops.rand([2, 2])], axis=1))
-    print("* stack: \n", genops.cat([genops.rand([2, 4]), genops.rand([2, 4])], axis=0))
+    print("* stack: \n", genops.stack([genops.rand([2, 4]), genops.rand([2, 4])], axis=0))
 
 
 genops.set_backend(genops.NUMPY)
