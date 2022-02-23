@@ -45,3 +45,12 @@ output_tensor = einops.rearrange(input_tensor, 't b c -> b c t')
 output_tensor = einops.reduce(input_tensor, 'b c (h h2) (w w2) -> b h w c', 'mean', h2=2, w2=2)
 ```
 
+## Best practice for writing torch-numpy compatible code.
+
+- Use `.zeros([1, 2])` instead of `.zeros(1, 2)`
+    - BOTH `numpy` & `torch` support tuple/list
+    - ONLY `torch` supports unpacking operator(*args)
+
+- Use `axis=?` instead of `dim=?`
+    - BOTH numpy & torch support axis=?
+    - ONLY torch supports dim=?

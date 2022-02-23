@@ -1,23 +1,10 @@
 from typing import Union, Optional, List
+from contextlib import contextmanager
 
 import re
 import torch
 import numpy as np
 from scipy import sparse
-"""
-    genops
-
-    1.  Use .zeros([1, 2]) instead of .zeros(1, 2)
-        BOTH numpy & torch support tuple/list
-        ONLY torch supports unpacking operator(*args)
-
-    2.  Use axis=? instead of dim=?
-        BOTH numpy & torch support axis=?
-        ONLY torch supports dim=?
-
-    3.  Use einops for reduce(max, min, mean)/transpose/[un]squeeze
-    
-"""
 
 BASIC_DATA_LIST = List[Union[List, int, float, bool]]
 TENSOR = Union[torch.Tensor, np.ndarray]
@@ -58,6 +45,41 @@ def set_seed(seed):
             torch.cuda.manual_seed(seed)
     elif is_numpy():
         np.random.seed(seed)
+
+
+@contextmanager
+def numpy_seed(seed):
+    state = np.random.get_state()
+    np.random.seed(seed)
+    try:
+        yield
+    finally:
+        np.random.set_state(state)
+
+
+@contextmanager
+def torch_seed(seed):
+    state = torch.random.get_rng_state()
+    if torch.cuda.is_available():
+        state_cuda = torch.cuda.random.get_rng_state()
+        torch.cuda.manual_seed(seed)
+    torch.manual_seed(seed)
+    try:
+        yield
+    finally:
+        torch.random.set_rng_state(state)
+        if torch.cuda.is_available():
+            torch.cuda.random.set_rng_state(state_cuda)
+
+
+@contextmanager
+def local_seed(seed):
+    if is_torch():
+        with torch_seed(seed):
+            yield
+    elif is_numpy():
+        with numpy_seed(seed):
+            yield
 
 
 def is_torch():
@@ -185,8 +207,16 @@ def abs(tensor: TENSOR):
 
 
 @same_arg_and_behaviour()
-def sum(tensor: TENSOR):
+def sum(tensor: TENSOR, axis: Optional[int] = None):
     pass
+
+
+def softmax(tensor: TENSOR, axis: Optional[int] = None):
+    if is_numpy():
+        from scipy.special import softmax
+        return softmax(tensor, axis=axis)
+    elif is_torch():
+        return torch.softmax(tensor, dim=axis)
 
 
 # def argmax(tensor: DATA, axis: Optional[int] = None, keepdim: bool = False):
@@ -209,7 +239,7 @@ def argmax(tensor: TENSOR, axis: Optional[int] = None):
 #############################################
 # Functions for operating arraies/tensors
 #############################################
-def cat(tensors: TENSOR_LIST, axis: int):
+def cat(tensors: TENSOR_LIST, axis: Optional[int]):
     if is_torch():
         return torch.cat(tensors, axis=axis)
     elif is_numpy():
@@ -217,7 +247,7 @@ def cat(tensors: TENSOR_LIST, axis: int):
 
 
 @same_arg_and_behaviour()
-def stack(*args, **kwargs):
+def stack(tensors: TENSOR_LIST, axis: Optional[int]):
     pass
 
 
