@@ -123,7 +123,7 @@ def tensor(data: BASIC_DATA_LIST):
         Only receive basic number type!
     """
     if is_torch():
-        return torch.tensor(data)
+        return torch.tensor(data, device=Backend.TORCH_DEVICE)
     elif is_numpy():
         return np.array(data)
 
