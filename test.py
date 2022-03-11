@@ -16,7 +16,13 @@ for backend in (genops.NUMPY, genops.TORCH):
     print("* argmax: \n", genops.argmax(genops.rand([2, 4]), axis=1))
     print("* cat: \n", genops.cat([genops.rand([2, 4]), genops.rand([2, 2])], axis=1))
     print("* stack: \n", genops.stack([genops.rand([2, 4]), genops.rand([2, 4])], axis=0))
-
+    input = genops.zeros([3, 4])
+    genops.scatter_(
+        input=input,  #
+        dim=1,
+        index=genops.tensor([[1, 2], [2, 3], [3, 1]]),
+        src=genops.tensor([[1., 1], [2, 2], [3, 3]]))
+    print("* scatter: \n", input)
 
 genops.set_backend(genops.NUMPY)
 a = genops.rand([2, 2, 1, 3])
@@ -29,7 +35,6 @@ genops.set_backend(genops.TORCH)
 print("* torch einsum:")
 a, b, c = genops.convert(a), genops.convert(b), genops.convert(c)
 print(genops.einsum("B T K1 D1, D1 D2, B T K2 D2->B T K1 K2", a, b, c))
-
 
 if torch.cuda.is_available():
     genops.set_backend(torch.tensor(0.0).cuda())

@@ -167,6 +167,13 @@ def gather(tensor: TENSOR, axis: int, index: TENSOR):
         return np.take_along_axis(arr=tensor, indices=index, axis=axis)
 
 
+def scatter_(input: TENSOR, dim: int, index: TENSOR, src: TENSOR):
+    if is_torch():
+        input.scatter_(dim=dim, index=index, src=src)
+    elif is_numpy():
+        np.put_along_axis(arr=input, indices=index, values=src, axis=dim)
+
+
 def normal(shape: TENSOR_SHAPE):
     """
         Return: Normal(0, 1)
